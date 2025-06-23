@@ -94,3 +94,67 @@
 
 </body>
 </html>
+<!-- ✅ Step 2: কর্মচারীর বেতন হিসাব -->
+<h2>👨‍💼 কর্মচারীর বেতন হিসাব</h2>
+
+<form id="salaryForm">
+  <input type="text" id="empName" placeholder="নাম" required>
+  <input type="text" id="month" placeholder="মাস (যেমন: জুন ২০২৫)" required>
+  <input type="number" id="salaryAmount" placeholder="পরিমাণ" required>
+  <button type="submit">বেতন যোগ করুন</button>
+</form>
+
+<table id="salaryTable">
+  <thead>
+    <tr>
+      <th>নাম</th>
+      <th>মাস</th>
+      <th>পরিমাণ</th>
+      <th>অ্যাকশন</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="salarySummary" class="summary"></p>
+
+<script>
+  const salaryForm = document.getElementById("salaryForm");
+  const salaryTable = document.querySelector("#salaryTable tbody");
+  const salarySummary = document.getElementById("salarySummary");
+
+  let totalSalary = 0;
+
+  salaryForm.onsubmit = function(e) {
+    e.preventDefault();
+    const empName = document.getElementById("empName").value;
+    const month = document.getElementById("month").value;
+    const amount = parseFloat(document.getElementById("salaryAmount").value);
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${empName}</td>
+      <td>${month}</td>
+      <td>${amount}</td>
+      <td><span class="delete-btn" onclick="deleteSalary(this, ${amount})">🗑️ ডিলিট</span></td>
+    `;
+    salaryTable.appendChild(row);
+
+    totalSalary += amount;
+    updateSalarySummary();
+    salaryForm.reset();
+  };
+
+  function deleteSalary(button, amount) {
+    if (confirm("এই বেতন মুছে ফেলতে চান?")) {
+      button.parentElement.parentElement.remove();
+      totalSalary -= amount;
+      updateSalarySummary();
+    }
+  }
+
+  function updateSalarySummary() {
+    salarySummary.innerText = `মোট বেতন: ${totalSalary} টাকা`;
+    updateDashboard(); // Step 4-এ কার্যকর হবে
+  }
+</script>
