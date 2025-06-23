@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ব্যবসার হিসাব Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2b6cb0;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+    .container {
+      padding: 20px;
+    }
+    .section {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #edf2f7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    ব্যবসার দৈনন্দিন হিসাব (Demo)
+  </header>
+  <div class="container">
+
+    <!-- Section: আয়-ব্যয় এন্ট্রি -->
+    <div class="section">
+      <h3>আয় / ব্যয় এন্ট্রি</h3>
+      <label>তারিখ:</label>
+      <input type="date" />
+
+      <label>ধরণ:</label>
+      <select>
+        <option>আয়</option>
+        <option>ব্যয়</option>
+      </select>
+
+      <label>বিবরণ:</label>
+      <input type="text" placeholder="যেমনঃ ট্রাক ভাড়া / পাইকার বিক্রি" />
+
+      <label>পরিমাণ:</label>
+      <input type="number" placeholder="৳" />
+
+      <button>এন্ট্রি যোগ করুন</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>তারিখ</th>
+            <th>ধরণ</th>
+            <th>বিবরণ</th>
+            <th>পরিমাণ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-06-22</td>
+            <td>আয়</td>
+            <td>পাইকার বিক্রি</td>
+            <td>৳5,000</td>
+          </tr>
+          <tr>
+            <td>2025-06-22</td>
+            <td>ব্যয়</td>
+            <td>পরিবহন খরচ</td>
+            <td>৳1,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section: সামারি -->
+    <div class="section">
+      <h3>আজকের সারসংক্ষেপ</h3>
+      <p><strong>মোট আয়:</strong> ৳5,000</p>
+      <p><strong>মোট ব্যয়:</strong> ৳1,000</p>
+      <p><strong>নেট লাভ:</strong> ৳4,000</p>
+    </div>
+
+  </div>
+</body>
+</html>
