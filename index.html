@@ -1,3 +1,15 @@
+<!-- ✅ Step 4: ড্যাশবোর্ড সারাংশ -->
+<div style="border:2px solid #888; padding:15px; margin-bottom:20px; background:#fff; border-radius:10px;">
+  <h2>📊 সার্বিক হিসাব (ড্যাশবোর্ড)</h2>
+  <p id="summary-income">মোট আয়: 0 টাকা</p>
+  <p id="summary-expense">মোট ব্যয়: 0 টাকা</p>
+  <p id="summary-profit">লাভ/ক্ষতি: 0 টাকা</p>
+  <p id="summary-due">মোট দেনা: 0 টাকা</p>
+  <p id="summary-receive">মোট পাওনা: 0 টাকা</p>
+  <p id="summary-salary">মোট বেতন: 0 টাকা</p>
+  <p id="summary-bank">ব্যাংক ব্যালান্স: 0 টাকা</p>
+</div>
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -226,5 +238,19 @@
   function updateBankSummary() {
     bankSummary.innerText = `বর্তমান ব্যাংক ব্যালান্স: ${bankBalance} টাকা`;
     updateDashboard(); // Step 4-এর জন্য
+  }
+</script>
+<script>
+  function updateDashboard() {
+    document.getElementById("summary-due").innerText = `মোট দেনা: ${totalDue} টাকা`;
+    document.getElementById("summary-receive").innerText = `মোট পাওনা: ${totalReceive} টাকা`;
+    document.getElementById("summary-salary").innerText = `মোট বেতন: ${totalSalary} টাকা`;
+    document.getElementById("summary-bank").innerText = `ব্যাংক ব্যালান্স: ${bankBalance} টাকা`;
+
+    // আয়-ব্যয়ের অংশ যুক্ত হলে নিচের দুইটা কাজ করবে
+    document.getElementById("summary-income").innerText = `মোট আয়: ${totalIncome || 0} টাকা`;
+    document.getElementById("summary-expense").innerText = `মোট ব্যয়: ${totalExpense || 0} টাকা`;
+    const profit = (totalIncome || 0) - (totalExpense || 0);
+    document.getElementById("summary-profit").innerText = `লাভ/ক্ষতি: ${profit} টাকা`;
   }
 </script>
