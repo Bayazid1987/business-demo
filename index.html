@@ -1,136 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ব্যবসার হিসাব Demo</title>
+  <meta charset="UTF-8">
+  <title>ব্যবসায়িক হিসাব</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #2b6cb0;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 1.5em;
-    }
-    .container {
-      padding: 20px;
-    }
-    .section {
-      background: white;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-    input, select, button {
-      padding: 8px;
-      margin-top: 5px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background: #edf2f7;
-    }
+    body { font-family: sans-serif; padding: 20px; background-color: #f9f9f9; }
+    h2 { margin-top: 40px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; background-color: #fff; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    input, select, button { padding: 5px; margin: 5px 0; }
+    form { margin-bottom: 10px; background: #eef; padding: 10px; border-radius: 8px; }
+    .delete-btn { color: red; cursor: pointer; }
+    .summary { font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <header>
-    ব্যবসার দৈনন্দিন হিসাব (Demo)
-  </header>
-  <div class="container">
 
-    <!-- Section: আয়-ব্যয় এন্ট্রি -->
-    <div class="section">
-      <h3>আয় / ব্যয় এন্ট্রি</h3>
-      <label>তারিখ:</label>
-      <input type="date" />
+<!-- ✅ Step 1: দেনাদার / পাওনাদার হিসাব -->
+<h2>📒 দেনাদার / পাওনাদার হিসাব</h2>
 
-      <label>ধরণ:</label>
-      <select>
-        <option>আয়</option>
-        <option>ব্যয়</option>
-      </select>
-
-      <label>বিবরণ:</label>
-      <input type="text" placeholder="যেমনঃ ট্রাক ভাড়া / পাইকার বিক্রি" />
-
-      <label>পরিমাণ:</label>
-      <input type="number" placeholder="৳" />
-
-      <button>এন্ট্রি যোগ করুন</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>তারিখ</th>
-            <th>ধরণ</th>
-            <th>বিবরণ</th>
-            <th>পরিমাণ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2025-06-22</td>
-            <td>আয়</td>
-            <td>পাইকার বিক্রি</td>
-            <td>৳5,000</td>
-          </tr>
-          <tr>
-            <td>2025-06-22</td>
-            <td>ব্যয়</td>
-            <td>পরিবহন খরচ</td>
-            <td>৳1,000</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Section: সামারি -->
-    <div class="section">
-      <h3>আজকের সারসংক্ষেপ</h3>
-      <p><strong>মোট আয়:</strong> ৳5,000</p>
-      <p><strong>মোট ব্যয়:</strong> ৳1,000</p>
-      <p><strong>নেট লাভ:</strong> ৳4,000</p>
-    </div>
-
-  </div>
-</body>
-</html>
-<hr>
-<h2>📄 দেনাদার / পাওনাদার হিসাব</h2>
-
-<form id="debtForm">
-  <input type="text" id="person" placeholder="নাম" required>
+<form id="entryForm">
+  <input type="text" id="name" placeholder="নাম" required>
   <input type="text" id="description" placeholder="বিবরণ">
   <input type="number" id="amount" placeholder="টাকার পরিমাণ" required>
   <select id="type">
-    <option value="due">দেনা</option>
-    <option value="receive">পাওনা</option>
+    <option value="dena">দেনা</option>
+    <option value="paona">পাওনা</option>
   </select>
   <button type="submit">যোগ করুন</button>
 </form>
 
-<table border="1" id="debtTable">
+<table id="entryTable">
   <thead>
     <tr>
       <th>নাম</th>
@@ -143,32 +43,34 @@
   <tbody></tbody>
 </table>
 
-<p id="summary"></p>
+<p id="summaryText" class="summary"></p>
 
 <script>
-  const form = document.getElementById('debtForm');
-  const tableBody = document.querySelector('#debtTable tbody');
-  const summary = document.getElementById('summary');
-  let totalDue = 0, totalReceive = 0;
+  const form = document.getElementById("entryForm");
+  const tableBody = document.querySelector("#entryTable tbody");
+  const summaryText = document.getElementById("summaryText");
+
+  let totalDue = 0;
+  let totalReceive = 0;
 
   form.onsubmit = function(e) {
     e.preventDefault();
-    const person = document.getElementById('person').value;
-    const description = document.getElementById('description').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const type = document.getElementById('type').value;
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
 
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${person}</td>
+      <td>${name}</td>
       <td>${description}</td>
       <td>${amount}</td>
-      <td>${type === 'due' ? 'দেনা' : 'পাওনা'}</td>
-      <td><button onclick="deleteRow(this, ${amount}, '${type}')">🗑️ ডিলিট</button></td>
+      <td>${type === "dena" ? "দেনা" : "পাওনা"}</td>
+      <td><span class="delete-btn" onclick="deleteRow(this, ${amount}, '${type}')">🗑️ ডিলিট</span></td>
     `;
     tableBody.appendChild(row);
 
-    if (type === 'due') totalDue += amount;
+    if (type === "dena") totalDue += amount;
     else totalReceive += amount;
 
     updateSummary();
@@ -176,159 +78,19 @@
   };
 
   function deleteRow(button, amount, type) {
-    if (confirm('আপনি কি সত্যিই এই এন্ট্রিটি মুছে ফেলতে চান?')) {
-      const row = button.parentElement.parentElement;
-      row.remove();
-
-      if (type === 'due') totalDue -= amount;
+    if (confirm("আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?")) {
+      button.parentElement.parentElement.remove();
+      if (type === "dena") totalDue -= amount;
       else totalReceive -= amount;
-
       updateSummary();
     }
   }
 
   function updateSummary() {
-    summary.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
-  }
-</script>
-<hr>
-<h2>👨‍💼 কর্মচারীর বেতন হিসাব</h2>
-
-<form id="salaryForm">
-  <input type="text" id="empName" placeholder="কর্মচারীর নাম" required>
-  <input type="month" id="month" required>
-  <input type="number" id="salary" placeholder="বেতন পরিমাণ" required>
-  <select id="status">
-    <option value="Paid">পরিশোধ</option>
-    <option value="Unpaid">অপরিশোধ</option>
-  </select>
-  <button type="submit">যোগ করুন</button>
-</form>
-
-<table border="1" id="salaryTable">
-  <thead>
-    <tr>
-      <th>নাম</th>
-      <th>মাস</th>
-      <th>বেতন</th>
-      <th>অবস্থা</th>
-      <th>অ্যাকশন</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<p id="salarySummary"></p>
-
-<script>
-  const salaryForm = document.getElementById('salaryForm');
-  const salaryTable = document.querySelector('#salaryTable tbody');
-  const salarySummary = document.getElementById('salarySummary');
-  let totalSalary = 0;
-
-  salaryForm.onsubmit = function(e) {
-    e.preventDefault();
-    const name = document.getElementById('empName').value;
-    const month = document.getElementById('month').value;
-    const salary = parseFloat(document.getElementById('salary').value);
-    const status = document.getElementById('status').value;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${name}</td>
-      <td>${month}</td>
-      <td>${salary}</td>
-      <td>${status}</td>
-      <td><button onclick="deleteSalaryRow(this, ${salary})">🗑️ ডিলিট</button></td>
-    `;
-    salaryTable.appendChild(row);
-    totalSalary += salary;
-    updateSalarySummary();
-    salaryForm.reset();
-  };
-
-  function deleteSalaryRow(button, salary) {
-    if (confirm('আপনি কি এই বেতন তথ্য মুছে ফেলতে চান?')) {
-      button.parentElement.parentElement.remove();
-      totalSalary -= salary;
-      updateSalarySummary();
-    }
-  }
-
-  function updateSalarySummary() {
-    salarySummary.innerText = `মোট বেতন: ${totalSalary} টাকা`;
-  }
-</script>
-<hr>
-<h2>🏦 ব্যাংক হিসাব</h2>
-
-<form id="bankForm">
-  <input type="date" id="bankDate" required>
-  <input type="text" id="bankNote" placeholder="বিবরণ">
-  <input type="number" id="bankAmount" placeholder="টাকার পরিমাণ" required>
-  <select id="bankType">
-    <option value="deposit">জমা</option>
-    <option value="withdraw">উত্তোলন</option>
-  </select>
-  <button type="submit">যোগ করুন</button>
-</form>
-
-<table border="1" id="bankTable">
-  <thead>
-    <tr>
-      <th>তারিখ</th>
-      <th>বিবরণ</th>
-      <th>টাকা</th>
-      <th>ধরন</th>
-      <th>অ্যাকশন</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<p id="bankSummary"></p>
-
-<script>
-  const bankForm = document.getElementById('bankForm');
-  const bankTable = document.querySelector('#bankTable tbody');
-  const bankSummary = document.getElementById('bankSummary');
-  let bankBalance = 0;
-
-  bankForm.onsubmit = function(e) {
-    e.preventDefault();
-    const date = document.getElementById('bankDate').value;
-    const note = document.getElementById('bankNote').value;
-    const amount = parseFloat(document.getElementById('bankAmount').value);
-    const type = document.getElementById('bankType').value;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${date}</td>
-      <td>${note}</td>
-      <td>${amount}</td>
-      <td>${type === 'deposit' ? 'জমা' : 'উত্তোলন'}</td>
-      <td><button onclick="deleteBankRow(this, ${amount}, '${type}')">🗑️ ডিলিট</button></td>
-    `;
-    bankTable.appendChild(row);
-
-    if (type === 'deposit') bankBalance += amount;
-    else bankBalance -= amount;
-
-    updateBankSummary();
-    bankForm.reset();
-  };
-
-  function deleteBankRow(button, amount, type) {
-    if (confirm('আপনি কি মুছে ফেলতে চান?')) {
-      button.parentElement.parentElement.remove();
-      if (type === 'deposit') bankBalance -= amount;
-      else bankBalance += amount;
-      updateBankSummary();
-    }
-  }
-
-  function updateBankSummary() {
-    bankSummary.innerText = `বর্তমান ব্যাংক ব্যালান্স: ${bankBalance} টাকা`;
+    summaryText.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
+    updateDashboard(); // Step 4-এ বসবে
   }
 </script>
 
+</body>
+</html>
