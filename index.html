@@ -191,4 +191,72 @@
     summary.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
   }
 </script>
+<hr>
+<h2>👨‍💼 কর্মচারীর বেতন হিসাব</h2>
+
+<form id="salaryForm">
+  <input type="text" id="empName" placeholder="কর্মচারীর নাম" required>
+  <input type="month" id="month" required>
+  <input type="number" id="salary" placeholder="বেতন পরিমাণ" required>
+  <select id="status">
+    <option value="Paid">পরিশোধ</option>
+    <option value="Unpaid">অপরিশোধ</option>
+  </select>
+  <button type="submit">যোগ করুন</button>
+</form>
+
+<table border="1" id="salaryTable">
+  <thead>
+    <tr>
+      <th>নাম</th>
+      <th>মাস</th>
+      <th>বেতন</th>
+      <th>অবস্থা</th>
+      <th>অ্যাকশন</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="salarySummary"></p>
+
+<script>
+  const salaryForm = document.getElementById('salaryForm');
+  const salaryTable = document.querySelector('#salaryTable tbody');
+  const salarySummary = document.getElementById('salarySummary');
+  let totalSalary = 0;
+
+  salaryForm.onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('empName').value;
+    const month = document.getElementById('month').value;
+    const salary = parseFloat(document.getElementById('salary').value);
+    const status = document.getElementById('status').value;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${name}</td>
+      <td>${month}</td>
+      <td>${salary}</td>
+      <td>${status}</td>
+      <td><button onclick="deleteSalaryRow(this, ${salary})">🗑️ ডিলিট</button></td>
+    `;
+    salaryTable.appendChild(row);
+    totalSalary += salary;
+    updateSalarySummary();
+    salaryForm.reset();
+  };
+
+  function deleteSalaryRow(button, salary) {
+    if (confirm('আপনি কি এই বেতন তথ্য মুছে ফেলতে চান?')) {
+      button.parentElement.parentElement.remove();
+      totalSalary -= salary;
+      updateSalarySummary();
+    }
+  }
+
+  function updateSalarySummary() {
+    salarySummary.innerText = `মোট বেতন: ${totalSalary} টাকা`;
+  }
+</script>
 
