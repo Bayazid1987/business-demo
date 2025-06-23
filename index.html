@@ -116,3 +116,56 @@
   </div>
 </body>
 </html>
+<hr>
+<h2>📄 দেনাদার / পাওনাদার হিসাব</h2>
+
+<form id="debtForm">
+  <input type="text" id="person" placeholder="নাম" required>
+  <input type="text" id="description" placeholder="বিবরণ">
+  <input type="number" id="amount" placeholder="টাকার পরিমাণ" required>
+  <select id="type">
+    <option value="due">দেনা</option>
+    <option value="receive">পাওনা</option>
+  </select>
+  <button type="submit">যোগ করুন</button>
+</form>
+
+<table border="1" id="debtTable">
+  <thead>
+    <tr>
+      <th>নাম</th>
+      <th>বিবরণ</th>
+      <th>টাকা</th>
+      <th>প্রকার</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="summary"></p>
+
+<script>
+  const form = document.getElementById('debtForm');
+  const tableBody = document.querySelector('#debtTable tbody');
+  const summary = document.getElementById('summary');
+  let totalDue = 0, totalReceive = 0;
+
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    const person = document.getElementById('person').value;
+    const description = document.getElementById('description').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const type = document.getElementById('type').value;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${person}</td><td>${description}</td><td>${amount}</td><td>${type === 'due' ? 'দেনা' : 'পাওনা'}</td>`;
+    tableBody.appendChild(row);
+
+    if (type === 'due') totalDue += amount;
+    else totalReceive += amount;
+
+    summary.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
+
+    form.reset();
+  };
+</script>
