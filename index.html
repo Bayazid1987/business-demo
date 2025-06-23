@@ -158,3 +158,73 @@
     updateDashboard(); // Step 4-এ কার্যকর হবে
   }
 </script>
+<!-- ✅ Step 3: ব্যাংক হিসাব -->
+<h2>🏦 ব্যাংক হিসাব</h2>
+
+<form id="bankForm">
+  <input type="text" id="bankDesc" placeholder="বিবরণ" required>
+  <input type="number" id="bankAmount" placeholder="টাকার পরিমাণ" required>
+  <select id="bankType">
+    <option value="deposit">জমা</option>
+    <option value="withdraw">উত্তোলন</option>
+  </select>
+  <button type="submit">লেনদেন যোগ করুন</button>
+</form>
+
+<table id="bankTable">
+  <thead>
+    <tr>
+      <th>বিবরণ</th>
+      <th>পরিমাণ</th>
+      <th>ধরণ</th>
+      <th>অ্যাকশন</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="bankSummary" class="summary"></p>
+
+<script>
+  const bankForm = document.getElementById("bankForm");
+  const bankTable = document.querySelector("#bankTable tbody");
+  const bankSummary = document.getElementById("bankSummary");
+
+  let bankBalance = 0;
+
+  bankForm.onsubmit = function(e) {
+    e.preventDefault();
+    const desc = document.getElementById("bankDesc").value;
+    const amount = parseFloat(document.getElementById("bankAmount").value);
+    const type = document.getElementById("bankType").value;
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${desc}</td>
+      <td>${amount}</td>
+      <td>${type === 'deposit' ? 'জমা' : 'উত্তোলন'}</td>
+      <td><span class="delete-btn" onclick="deleteBankRow(this, ${amount}, '${type}')">🗑️ ডিলিট</span></td>
+    `;
+    bankTable.appendChild(row);
+
+    if (type === "deposit") bankBalance += amount;
+    else bankBalance -= amount;
+
+    updateBankSummary();
+    bankForm.reset();
+  };
+
+  function deleteBankRow(button, amount, type) {
+    if (confirm("এই লেনদেন মুছে ফেলতে চান?")) {
+      button.parentElement.parentElement.remove();
+      if (type === "deposit") bankBalance -= amount;
+      else bankBalance += amount;
+      updateBankSummary();
+    }
+  }
+
+  function updateBankSummary() {
+    bankSummary.innerText = `বর্তমান ব্যাংক ব্যালান্স: ${bankBalance} টাকা`;
+    updateDashboard(); // Step 4-এর জন্য
+  }
+</script>
