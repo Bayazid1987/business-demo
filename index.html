@@ -137,6 +137,7 @@
       <th>বিবরণ</th>
       <th>টাকা</th>
       <th>প্রকার</th>
+      <th>অ্যাকশন</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -158,14 +159,36 @@
     const type = document.getElementById('type').value;
 
     const row = document.createElement('tr');
-    row.innerHTML = `<td>${person}</td><td>${description}</td><td>${amount}</td><td>${type === 'due' ? 'দেনা' : 'পাওনা'}</td>`;
+    row.innerHTML = `
+      <td>${person}</td>
+      <td>${description}</td>
+      <td>${amount}</td>
+      <td>${type === 'due' ? 'দেনা' : 'পাওনা'}</td>
+      <td><button onclick="deleteRow(this, ${amount}, '${type}')">🗑️ ডিলিট</button></td>
+    `;
     tableBody.appendChild(row);
 
     if (type === 'due') totalDue += amount;
     else totalReceive += amount;
 
-    summary.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
-
+    updateSummary();
     form.reset();
   };
+
+  function deleteRow(button, amount, type) {
+    if (confirm('আপনি কি সত্যিই এই এন্ট্রিটি মুছে ফেলতে চান?')) {
+      const row = button.parentElement.parentElement;
+      row.remove();
+
+      if (type === 'due') totalDue -= amount;
+      else totalReceive -= amount;
+
+      updateSummary();
+    }
+  }
+
+  function updateSummary() {
+    summary.innerText = `মোট দেনা: ${totalDue} টাকা | মোট পাওনা: ${totalReceive} টাকা`;
+  }
 </script>
+
