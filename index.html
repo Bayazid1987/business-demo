@@ -240,6 +240,80 @@
     updateDashboard(); // Step 4-এর জন্য
   }
 </script>
+<!-- ✅ Step 5: আয় ও ব্যয় হিসাব -->
+<h2>💰 আয় ও ব্যয় হিসাব</h2>
+
+<form id="incomeExpenseForm">
+  <input type="text" id="ieDesc" placeholder="বিবরণ" required>
+  <input type="number" id="ieAmount" placeholder="টাকার পরিমাণ" required>
+  <select id="ieType">
+    <option value="income">আয়</option>
+    <option value="expense">ব্যয়</option>
+  </select>
+  <button type="submit">যুক্ত করুন</button>
+</form>
+
+<table id="ieTable">
+  <thead>
+    <tr>
+      <th>বিবরণ</th>
+      <th>পরিমাণ</th>
+      <th>ধরণ</th>
+      <th>অ্যাকশন</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="ieSummary" class="summary"></p>
+
+<script>
+  const ieForm = document.getElementById("incomeExpenseForm");
+  const ieTable = document.querySelector("#ieTable tbody");
+  const ieSummary = document.getElementById("ieSummary");
+
+  let totalIncome = 0;
+  let totalExpense = 0;
+
+  ieForm.onsubmit = function(e) {
+    e.preventDefault();
+    const desc = document.getElementById("ieDesc").value;
+    const amount = parseFloat(document.getElementById("ieAmount").value);
+    const type = document.getElementById("ieType").value;
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${desc}</td>
+      <td>${amount}</td>
+      <td>${type === "income" ? "আয়" : "ব্যয়"}</td>
+      <td><span class="delete-btn" onclick="deleteIE(this, ${amount}, '${type}')">🗑️ ডিলিট</span></td>
+    `;
+    ieTable.appendChild(row);
+
+    if (type === "income") totalIncome += amount;
+    else totalExpense += amount;
+
+    updateIESummary();
+    updateDashboard(); // ড্যাশবোর্ড আপডেট
+    ieForm.reset();
+  };
+
+  function deleteIE(button, amount, type) {
+    if (confirm("আপনি কি মুছে ফেলতে চান?")) {
+      button.parentElement.parentElement.remove();
+      if (type === "income") totalIncome -= amount;
+      else totalExpense -= amount;
+      updateIESummary();
+      updateDashboard();
+    }
+  }
+
+  function updateIESummary() {
+    const profit = totalIncome - totalExpense;
+    ieSummary.innerText = `মোট আয়: ${totalIncome} টাকা | মোট ব্যয়: ${totalExpense} টাকা | লাভ/ক্ষতি: ${profit} টাকা`;
+  }
+</script>
+
 <script>
   function updateDashboard() {
     document.getElementById("summary-due").innerText = `মোট দেনা: ${totalDue} টাকা`;
